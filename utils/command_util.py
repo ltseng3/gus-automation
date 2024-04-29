@@ -95,6 +95,10 @@ def get_replication_protocol_args(replication_protocol):
         return "-gus=false -f=true"
     elif replication_protocol == "pqr":
         return "-gus=false -exec=true"
+    elif replication_protocol == "mp":
+        return "-gus=false -mp=true -exec=true"
+    elif replication_protocol == "mpl":
+        return "-gus=false -mpl=true -exec=true"
     else:
         print("ERROR: unknown replication protocol. Please choose between gus, epaxos, gryff, giza, and PQR ", replication_protocol)
         exit(1)
