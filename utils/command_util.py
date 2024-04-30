@@ -115,6 +115,8 @@ def get_client_cmd(config, timestamp, server_names_to_ips, server_id):
             path_to_client_bin = os.path.join(config['remote_bin_directory'], 'pineapple', 'client')
     elif config['replication_protocol'] == "epaxos":
         path_to_client_bin = os.path.join(config['remote_bin_directory'], 'gus-epaxos', 'clientepaxos')
+    elif config['replication_protocol'] == "mp" or config['replication_protocol'] == "mpl":
+        path_to_client_bin = os.path.join(config['remote_bin_directory'], 'gus-epaxos', 'clientpaxos')        
     else:
         path_to_client_bin = os.path.join(config['remote_bin_directory'], 'gus-epaxos', 'client')
 
