@@ -150,6 +150,18 @@ def run():
 
                     setup_network_delay(config_path)
                     run_experiment(results_extension_RMWfig6, config_path)
+            if "RMWFig6-5.json" in config_path:
+                rmw_percentages = [.125, 1.0]
+                for rmw in rmw_percentages:
+                    update(config_path, "rmw_percentage", rmw)
+                    wr = (1 - rmw) / 2  # split reads/writes evenly
+                    update(config_path, "write_percentage", wr)
+
+                    # For fig7, now results file structure is: TIMESTAMP/FIG7/PROTOCOL-RMW_PERCENTAGE/CLIENT/...
+                    results_extension_RMWfig6_5 = Path(str(results_extension) + "-" + (str(rmw)))
+
+                    setup_network_delay(config_path)
+                    run_experiment(results_extension_RMWfig6_5, config_path)
             # For gryffFig 11; for each protocol, change tail-at-scale value
             elif "gryffFig11.json" in config_path:
                 tas_values = [1, 15, 30, 45, 60, 75, 90, 105]
