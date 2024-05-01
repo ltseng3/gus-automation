@@ -26,6 +26,9 @@ def get_metrics(options):
         metrics = results_data_to_metrics(options, results_data)
         if "onlytputs" in options:
             output_max_tput_only(metrics)
+        elif "tputsLatency" in options:
+            output_max_tput_only(metrics)
+            output_max_latency_only(metrics)
         else:
             output_metrics(options, metrics)
 
@@ -60,6 +63,8 @@ def read_input(args):
             options["clear"] = True
         elif arg.startswith("--onlytputs"):
             options["onlytputs"] = True
+        elif arg.startswith("--tputsLatency"):
+            options["tputsLatency"] = True            
         elif arg.startswith("--onlymax"):
             options["onlymax"] = True
         # figs and protocols are options that form lists
@@ -303,7 +308,15 @@ def output_max_tput_only(metrics):
             trimmed_metrics[fig][protocol] = metrics[fig][protocol]["tput"]["p50.0"]
 
     print(json.dumps(trimmed_metrics))
+    
+def output_max_latency_only(metrics):
+    trimmed_metrics = {}
+    for fig, fig_val in metrics.items():
+        trimmed_metrics[fig] = {}
+        for protocol, protocol_val in fig_val.items():
+            trimmed_metrics[fig][protocol] = metrics[fig][protocol]["total_protocol_data"]
 
+    print(json.dumps(trimmed_metrics))
 
 def output_max_only(metrics):
     trimmed_metrics = {}
