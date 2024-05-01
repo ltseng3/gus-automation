@@ -229,7 +229,7 @@ def results_data_to_metrics(options, results_data):
                 if "tput" not in file_key:  # add all Reads and Writes to total_protocol_data
                     total_protocol_data = np.concatenate([total_protocol_data, file_contents])
 
-            if "pineapple" in protocol or "pqr" in protocol:
+            if "pineapple" in protocol or "pqr" in protocol or "mp" in protocol or "mpl" in protocol or "epaxos" in protocol or "gryff" in protocol:
                 metrics[fig][protocol]["tput"] = {}
                 for file_key, _ in protocol_val.copy().items():
                     if "tput" in file_key:
@@ -332,7 +332,7 @@ def usage():
 # Gets file_key for results_data dict
 def get_file_key(f, file_path, protocol):
     if "tput" in f:
-        if "pineapple" in protocol or "pqr" in protocol:
+        if "pineapple" in protocol or "pqr" in protocol or "mp" in protocol or "mpl" in protocol or "epaxos" in protocol or "gryff" in protocol:
             return f
         return "tput"
     else:
