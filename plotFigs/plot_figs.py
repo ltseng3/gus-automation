@@ -85,23 +85,23 @@ def main(results_path):
         elif fig == "fig7a": # can re-use plot_fig6
             print("Plotting fig7a...")
             plot_fig6(plot_target_directory, csv_target_directory, "fig7a", latencies_folder_paths["gryff"],
-                           latencies_folder_paths["pineapple"], latencies_folder_paths["pqr"], latencies_folder_paths["epaxos"])
+                           latencies_folder_paths["pineapple"], latencies_folder_paths["pqr"], latencies_folder_paths["epaxos"], latencies_folder_paths["mp"], latencies_folder_paths["mpl"])
         elif fig == "fig7b":
             print("Plotting fig7b...")
             plot_fig6(plot_target_directory, csv_target_directory, "fig7b", latencies_folder_paths["gryff"],
-                           latencies_folder_paths["pineapple"], latencies_folder_paths["pqr"], latencies_folder_paths["epaxos"])
+                           latencies_folder_paths["pineapple"], latencies_folder_paths["pqr"], latencies_folder_paths["epaxos"], latencies_folder_paths["mp"], latencies_folder_paths["mpl"])
         elif fig == "fig7c":
             print("Plotting fig7c...")
             plot_fig6(plot_target_directory, csv_target_directory, "fig7c", latencies_folder_paths["gryff"],
-                           latencies_folder_paths["pineapple"], latencies_folder_paths["pqr"], latencies_folder_paths["epaxos"])
+                           latencies_folder_paths["pineapple"], latencies_folder_paths["pqr"], latencies_folder_paths["epaxos"], latencies_folder_paths["mp"], latencies_folder_paths["mpl"])
         elif fig == "fig8top":
             print("Plotting fig8top...")
             plot_fig8(plot_target_directory, csv_target_directory, "fig8top", latencies_folder_paths["gryff"],
-                           latencies_folder_paths["pineapple"], latencies_folder_paths["pqr"], latencies_folder_paths["epaxos"])
+                           latencies_folder_paths["pineapple"], latencies_folder_paths["pqr"], latencies_folder_paths["epaxos"], latencies_folder_paths["mp"], latencies_folder_paths["mpl"])
         elif fig == "fig8bottom":
             print("Plotting fig8bottom...")
             plot_fig8(plot_target_directory, csv_target_directory, "fig8bottom", latencies_folder_paths["gryff"],
-                           latencies_folder_paths["pineapple"], latencies_folder_paths["pqr"], latencies_folder_paths["epaxos"])
+                           latencies_folder_paths["pineapple"], latencies_folder_paths["pqr"], latencies_folder_paths["epaxos"], latencies_folder_paths["mp"], latencies_folder_paths["mpl"])
         # elif fig == "gryffFig6a":
         #     print("Plotting gryffFig6a...")
         #     plot_gryffFig6(plot_target_directory, csv_target_directory, "gryff6a", latencies_folder_paths["gryff"],
