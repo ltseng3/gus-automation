@@ -223,7 +223,7 @@ def plot_fig8(plot_target_directory, csv_target_directory, figure_name, gryff_la
                    pqr_latency_folder, epaxos_latency_folder, mp_latency_folder, mpl_latency_folder):
     read_csvs, write_csvs, _, _, rmw_csvs, _ = calculate_csvs_cdf(figure_name, csv_target_directory, gryff_latency_folder,
                                                                   pineapple_latency_folder, pqr_latency_folder,
-                                                                  epaxos_latency_folder, rmw=True)
+                                                                  epaxos_latency_folder, mp_latency_folder, mpl_latency_folder, rmw=True)
 
     # Reads
     cdf_csvs_to_plot(plot_target_directory, figure_name, read_csvs, is_for_reads=True)
