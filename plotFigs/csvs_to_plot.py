@@ -54,7 +54,7 @@ def cdf_csvs_to_plot(plot_target_directory, figure, csvs, is_for_reads, rmw=Fals
     else:
         ax.set_ylabel('Fraction of Writes')
 
-    ax.legend()
+    #ax.legend()
 
     fig.savefig(plot_target_directory / Path(figure + ".png") , bbox_inches="tight")
 
