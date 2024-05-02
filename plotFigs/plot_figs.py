@@ -69,7 +69,7 @@ def main(results_path):
         elif fig == "fig6top":
             print("Plotting fig6top...")
             plot_fig6(plot_target_directory, csv_target_directory, "fig6top", latencies_folder_paths["gryff"],
-                           latencies_folder_paths["pineapple"], latencies_folder_paths["pqr"], latencies_folder_paths["epaxos"])
+                           latencies_folder_paths["pineapple"], latencies_folder_paths["pqr"], latencies_folder_paths["epaxos"], latencies_folder_paths["mp"], latencies_folder_paths["mpl"])
         elif fig == "fig6bottom":
             print("Plotting fig6bottom...")
             plot_fig6(plot_target_directory, csv_target_directory, "fig6bottom", latencies_folder_paths["gryff"],
@@ -174,10 +174,11 @@ def plot_RMWFig6(plot_target_directory, results_path, csv_target_directory, late
     tput_wp_plot(plot_target_directory, "rmw6", throughputs, rmw=True)
 
 def plot_fig6(plot_target_directory, csv_target_directory, figure_name, gryff_latency_folder,
-                   pineapple_latency_folder, pqr_latency_folder, epaxos_latency_folder=""):
+                   pineapple_latency_folder, pqr_latency_folder, epaxos_latency_folder="", mp_latency_folder, mpl_latency_folder):
     read_csvs, write_csvs, _, _, rmw_csvs, _ = calculate_csvs_cdf(figure_name, csv_target_directory,
                                                                   gryff_latency_folder,
                                                                   pineapple_latency_folder, pqr_latency_folder,
+                                                                  mp_latency_folder, mpl_latency_folder,
                                                                   epaxos_latency_folder, rmw=True)
 
     cdf_csvs_to_plot(plot_target_directory, figure_name, read_csvs, is_for_reads=True)
@@ -251,11 +252,11 @@ def plot_gryffFig11(plot_target_directory, results_path, csv_target_directory, l
 # Returns a tuple of tuple of csv paths.
 # This is used for figs 4 , 5 and 9
 def calculate_csvs_cdf(figure_name, csv_target_directory, gryff_latency_folder, pineapple_latency_folder, \
-                       pqr_latency_folder, epaxos_latency_folder="", rmw=False):
+                       pqr_latency_folder, epaxos_latency_folder="", mp_latency_folder, mpl_latency_folder, rmw=False):
     print("quick print")
     if epaxos_latency_folder != "":
-        protocols = ["gryff", "pineapple", "pqr", "epaxos"]
-        folders = {"gryff": gryff_latency_folder, "pineapple": pineapple_latency_folder, "pqr": pqr_latency_folder, "epaxos": epaxos_latency_folder}
+        protocols = ["gryff", "pineapple", "pqr", "epaxos", "mp", "mpl"]
+        folders = {"gryff": gryff_latency_folder, "pineapple": pineapple_latency_folder, "pqr": pqr_latency_folder, "epaxos": epaxos_latency_folder, "mp": mp_latency_folder, "mpl": mpl_latency_folder}
     else:
         protocols = ["gryff", "pineapple", "pqr"]
         folders = {"gryff": gryff_latency_folder, "pineapple": pineapple_latency_folder, "pqr": pqr_latency_folder}
