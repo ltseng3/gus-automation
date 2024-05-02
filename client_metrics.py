@@ -244,7 +244,7 @@ def results_data_to_metrics(options, results_data):
                         del metrics[fig][protocol][file_key]
             if len(total_protocol_data) > 0:
                 metrics[fig][protocol]["total_protocol_data"] = get_stats(options, total_protocol_data)
-            else
+            else: 
                 print(protocol)
                 
     return metrics
