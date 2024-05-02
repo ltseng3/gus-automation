@@ -11,9 +11,9 @@ from matplotlib.ticker import FixedLocator, FuncFormatter
 ### Helper functions for plotting ### 
 
 # Defining lines and colors
-colors = {"gryff":"green", "pineapple":"orange", "pqr":"blue", "epaxos":"red"}
-linestyles = {"gryff":"dashdot", "pineapple":"solid", "pqr":"dotted", "epaxos":"dashed"}
-labels = {"gryff":"Gryff", "pineapple":"Pineapple", "pqr":"PQR", "epaxos":"EPaxos"} # properly stylized
+colors = {"gryff":"green", "pineapple":"orange", "pqr":"blue", "epaxos":"red", "mp":"black", "mpl":"brown"}
+linestyles = {"gryff":"dashdot", "pineapple":"solid", "pqr":"dotted", "epaxos":"dashed", "mp":"dotted", "mpl":"dotted"}
+labels = {"gryff":"Gryff", "pineapple":"Pineapple", "pqr":"PQR", "epaxos":"EPaxos", "mp":"MPaxos", "mpl":"MPaxos(L)"} # properly stylized
 markers ={"gryff":"v", "pineapple": "o"}
 
 # New in development version with matplotlib
