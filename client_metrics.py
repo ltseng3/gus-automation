@@ -242,9 +242,11 @@ def results_data_to_metrics(options, results_data):
                             continue
                         metrics[fig][protocol]["tput"] = {k: metrics[fig][protocol][file_key].get(k, 0) + metrics[fig][protocol]["tput"].get(k, 0) for k in set(metrics[fig][protocol][file_key])}
                         del metrics[fig][protocol][file_key]
-
-            metrics[fig][protocol]["total_protocol_data"] = get_stats(options, total_protocol_data)
-
+            if len(total_protocol_data) > 0:
+                metrics[fig][protocol]["total_protocol_data"] = get_stats(options, total_protocol_data)
+            else
+                print(protocol)
+                
     return metrics
 
 
