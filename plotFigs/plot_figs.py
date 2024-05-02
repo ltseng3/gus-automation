@@ -220,7 +220,7 @@ def plot_gryffFig8(plot_target_directory, csv_target_directory, gryff_latency_fo
     cdf_csvs_to_plot(plot_target_directory, "gryff8" + "-rmw", rmw_csvs, is_for_reads=False, rmw=True)
 
 def plot_fig8(plot_target_directory, csv_target_directory, figure_name, gryff_latency_folder, pineapple_latency_folder,
-                   pqr_latency_folder, epaxos_latency_folder=""):
+                   pqr_latency_folder, epaxos_latency_folder, mp_latency_folder, mpl_latency_folder):
     read_csvs, write_csvs, _, _, rmw_csvs, _ = calculate_csvs_cdf(figure_name, csv_target_directory, gryff_latency_folder,
                                                                   pineapple_latency_folder, pqr_latency_folder,
                                                                   epaxos_latency_folder, rmw=True)
