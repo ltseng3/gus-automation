@@ -74,6 +74,14 @@ def main(results_path):
             print("Plotting fig6bottom...")
             plot_fig6(plot_target_directory, csv_target_directory, "fig6bottom", latencies_folder_paths["gryff"],
                            latencies_folder_paths["pineapple"], latencies_folder_paths["pqr"], latencies_folder_paths["epaxos"], latencies_folder_paths["mp"], latencies_folder_paths["mpl"])
+        elif fig == "fig6top-VA":
+            print("Plotting fig6top...")
+            plot_fig6(plot_target_directory, csv_target_directory, "fig6top", latencies_folder_paths["gryff"],
+                           latencies_folder_paths["pineapple"], latencies_folder_paths["pqr"], latencies_folder_paths["epaxos"], latencies_folder_paths["mp"], latencies_folder_paths["mpl"])
+        elif fig == "fig6bottom-VA":
+            print("Plotting fig6bottom...")
+            plot_fig6(plot_target_directory, csv_target_directory, "fig6bottom", latencies_folder_paths["gryff"],
+                           latencies_folder_paths["pineapple"], latencies_folder_paths["pqr"], latencies_folder_paths["epaxos"], latencies_folder_paths["mp"], latencies_folder_paths["mpl"])
         elif fig == "fig7a": # can re-use plot_fig6
             print("Plotting fig7a...")
             plot_fig6(plot_target_directory, csv_target_directory, "fig7a", latencies_folder_paths["gryff"],
