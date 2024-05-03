@@ -104,7 +104,8 @@ def run():
         set_config(config_path)
 
         # default is all protocols
-        protocols = ["pqr", "pineapple", "mp", "mpl"]
+        protocols = ["pqr", "pineapple", "mp", "mpl", "epaxos", "gryff"]
+        # protocols = ["pqr", "pineapple", "epaxos"]
         # Figs 8 and 9 plotting is combined gus and giza only
         # if "fig9" in config_path or "fig8" in config_path:
         #     protocols = ["gus", "giza"]
@@ -139,7 +140,7 @@ def run():
             #         run_experiment(results_extension_fig6, config_path)
             # For RMWFig 6; for each protocol, change RMW percentage
             if "RMWFig6.json" in config_path:
-                rmw_percentages = [.125, 1.0]
+                rmw_percentages = [.01, .1, .5, 1.0]
                 for rmw in rmw_percentages:
                     update(config_path, "rmw_percentage", rmw)
                     wr = (1 - rmw) / 2  # split reads/writes evenly
@@ -151,7 +152,7 @@ def run():
                     setup_network_delay(config_path)
                     run_experiment(results_extension_RMWfig6, config_path)
             if "RMWFig6-5.json" in config_path:
-                rmw_percentages = [.125, 1.0]
+                rmw_percentages = [.01, .1, .5, 1.0]
                 for rmw in rmw_percentages:
                     update(config_path, "rmw_percentage", rmw)
                     wr = (1 - rmw) / 2  # split reads/writes evenly
