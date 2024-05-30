@@ -8,7 +8,7 @@ from matplotlib import scale as mscale
 from matplotlib import transforms as mtransforms
 from matplotlib.ticker import FixedLocator, FuncFormatter
 
-### Helper functions for plotting ### 
+### Helper functions for plotting ###
 
 # Defining lines and colors
 colors = {"gryff":"green", "pineapple":"orange", "pqr":"blue", "epaxos":"red", "mp":"black", "mpl":"brown"}
@@ -18,7 +18,7 @@ markers ={"gryff":"v", "pineapple": "o"}
 
 # New in development version with matplotlib
 def cdf_csvs_to_plot(plot_target_directory, figure, csvs, is_for_reads, rmw=False, log=False):
-    # Reformat function header to just pass csvs dictionary 
+    # Reformat function header to just pass csvs dictionary
     # csvs = {"gus": gus_csv, "gryff":gryff_csv, "epaxos":epaxos_csv}
     print("csvs = " , csvs)
 
@@ -31,20 +31,23 @@ def cdf_csvs_to_plot(plot_target_directory, figure, csvs, is_for_reads, rmw=Fals
     # sizing and margins
     fig.set_figheight(1.5)
     fig.set_figwidth(6)
-    # ax.margins(x=0.01)
-
 
     # d is data (singular)
     for protocol, d in data.items():
         print("d = ", d)
         ax.plot(d[:,0], d[:,1], color=colors[protocol], linestyle=linestyles[protocol], label=labels[protocol])
 
-    # Setting scale for y axis
+    # log settings
     if log == True:
         ax.set_yscale('log')
-        ax.set_ylim(bottom=.01)
+        ax.set_ylim(bottom=(0.1 * 6))
+        ax.set_ylim(top=1.1)
+        ax.set_xlim(left=250)
+        ax.set_xlim(right=550)
+    else:
+        ax.set_xlim(left=0)
+
     # Adding labels
-    ax.set_xlim(left=0)
     ax.set_xlabel('Latency (ms)')
 
     if is_for_reads:
@@ -53,8 +56,6 @@ def cdf_csvs_to_plot(plot_target_directory, figure, csvs, is_for_reads, rmw=Fals
         ax.set_ylabel('Fraction of RMW')
     else:
         ax.set_ylabel('Fraction of Writes')
-
-    #ax.legend()
 
     fig.savefig(plot_target_directory / Path(figure + ".png") , bbox_inches="tight")
 
