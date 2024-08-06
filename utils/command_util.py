@@ -15,7 +15,7 @@ def get_master_cmd(config, timestamp):
     exp_directory = os.path.join(config['base_remote_experiment_directory'], timestamp);
     if config['replication_protocol'] == "gryff":
         path_to_master_bin = os.path.join(config['remote_bin_directory'], 'gryff', 'master')
-    elif config['replication_protocol'] == "pineapple":
+    elif config['replication_protocol'] == "pineapple" or config['replication_protocol'] == "WAN-pineapple":
         path_to_master_bin = os.path.join(config['remote_bin_directory'], 'pineapple', 'master')
     else:
         path_to_master_bin = os.path.join(config['remote_bin_directory'], 'gus-epaxos', 'master')
@@ -49,7 +49,7 @@ def get_server_cmd(config, timestamp, server_names_to_ips, server_name):
     exp_directory = os.path.join(config['base_remote_experiment_directory'], timestamp)
     if config['replication_protocol'] == "gryff":
         path_to_server_bin = os.path.join(config['remote_bin_directory'], 'gryff', 'server')
-    elif config['replication_protocol'] == "pineapple":
+    elif config['replication_protocol'] == "pineapple" or config['replication_protocol'] == "WAN-pineapple":
         path_to_server_bin = os.path.join(config['remote_bin_directory'], 'pineapple', 'server')
     else:
         path_to_server_bin = os.path.join(config['remote_bin_directory'], 'gus-epaxos', 'server')
@@ -85,19 +85,19 @@ def get_server_cmd(config, timestamp, server_names_to_ips, server_name):
 
 
 def get_replication_protocol_args(replication_protocol):
-    if replication_protocol == "gus" or replication_protocol == "pineapple":
+    if replication_protocol == "gus" or replication_protocol == "pineapple" or replication_protocol == "WAN-pineapple":
         return ""
-    elif replication_protocol == "epaxos":
+    elif replication_protocol == "epaxos" or replication_protocol == "WAN-epaxos":
         return "-gus=false -e=true"
     elif replication_protocol == "gryff":
         return "-t -proxy -exec=true -dreply=true"
     elif replication_protocol == "giza":
         return "-gus=false -f=true"
-    elif replication_protocol == "pqr":
+    elif replication_protocol == "pqr" or replication_protocol == "WAN-pqr":
         return "-gus=false -exec=true"
-    elif replication_protocol == "mp":
+    elif replication_protocol == "mp" or replication_protocol == "WAN-mp":
         return "-gus=false -mp=true -exec=true"
-    elif replication_protocol == "mpl":
+    elif replication_protocol == "mpl" or replication_protocol == "WAN-mpl":
         return "-gus=false -mpl=true -exec=true"
     else:
         print("ERROR: unknown replication protocol. Please choose between gus, epaxos, gryff, giza, and PQR ", replication_protocol)
@@ -116,7 +116,12 @@ def get_client_cmd(config, timestamp, server_names_to_ips, server_id):
     elif config['replication_protocol'] == "epaxos":
         path_to_client_bin = os.path.join(config['remote_bin_directory'], 'gus-epaxos', 'clientepaxos')
     elif config['replication_protocol'] == "mp" or config['replication_protocol'] == "mpl":
-        path_to_client_bin = os.path.join(config['remote_bin_directory'], 'gus-epaxos', 'clientpaxos')        
+        path_to_client_bin = os.path.join(config['remote_bin_directory'], 'gus-epaxos', 'clientpaxos')
+    elif config['replication_protocol'] == "WAN-pineapple":
+        path_to_client_bin = os.path.join(config['remote_bin_directory'], 'pineapple', 'clientWAN')
+    elif (config['replication_protocol'] == "WAN-pqr" or config['replication_protocol'] == "WAN-mp"
+            or config['replication_protocol'] == "WAN-mpl" or config['replication_protocol'] == "WAN-epaxos"):
+        path_to_client_bin = os.path.join(config['remote_bin_directory'], 'gus-epaxos', 'clientWAN')
     else:
         path_to_client_bin = os.path.join(config['remote_bin_directory'], 'gus-epaxos', 'client')
 
@@ -130,7 +135,7 @@ def get_client_cmd(config, timestamp, server_names_to_ips, server_id):
             '-c=%d' % config['conflict_percentage'],
             '-T=%d' % int(config['clients_per_replica'] * config['number_of_replicas'])
         ]])
-    elif config['replication_protocol'] == "epaxos":
+    elif config['replication_protocol'] == "epaxos" or config['replication_protocol'] == "WAN-epaxos":
         client_command = ' '.join([str(x) for x in [
             path_to_client_bin,
             '-saddr=%s' % server_addr,
@@ -154,14 +159,17 @@ def get_client_cmd(config, timestamp, server_names_to_ips, server_id):
         client_command += ' -proxy -rCount=%d' % config["number_of_replicas"]
 
     if (config['replication_protocol'] == "gryff" or config['replication_protocol'] == "pineapple"
-            or config['replication_protocol'] == "pqr" or config['replication_protocol'] == "epaxos" 
-            or config['replication_protocol'] == "mp" or config['replication_protocol'] == "mpl"):
+            or config['replication_protocol'] == "pqr" or config['replication_protocol'] == "epaxos"
+            or config['replication_protocol'] == "mp" or config['replication_protocol'] == "mpl"
+            or config['replication_protocol'] == "WAN-pineapple" or config['replication_protocol'] == "WAN-pqr"
+            or config['replication_protocol'] == "WAN-mp" or config['replication_protocol'] == "WAN-mpl"
+            or config['replication_protocol'] == "WAN-epaxos"):
         client_command += ' -rmws=%f' % config["rmw_percentage"]
 
-    if config['replication_protocol'] == "pineapple" or config['replication_protocol'] == "gryff":
+    if (config['replication_protocol'] == "pineapple" or config['replication_protocol'] == "gryff"):
         client_command += " -tailAtScale=%d" % config["tail_at_scale"]
 
-        # Only run client for specified length.
+    # Only run client for specified length.
     timeout = "%d" % config["experiment_length"]
     timeout += "s"
     client_command = "timeout %s %s" % (timeout, client_command)
@@ -173,4 +181,5 @@ def get_client_cmd(config, timestamp, server_names_to_ips, server_id):
     stderr_file = os.path.join(exp_directory, 'client-stderr.log')
     client_command = tcsh_redirect_output_to_files(client_command,
                                                    stdout_file, stderr_file)
+    print(client_command)
     return client_command
