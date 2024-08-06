@@ -22,13 +22,22 @@ def get_metrics(options):
     if "onlymax" in options:
         metrics = max_results_data_to_metrics(options, results_data)
         output_max_only(metrics)
+    elif "maxSums" in options:
+        metrics = maxSums_results_data_to_metrics(options, results_data)
+        output_max_sums(metrics)
+
     else:
         metrics = results_data_to_metrics(options, results_data)
+        experiment = check_cmd_output("ls " + "/root/go/src/gus-automation/results" + "| sort -r | head -n 1")
+        options["experiment"] = experiment
         if "onlytputs" in options:
             output_max_tput_only(metrics)
         elif "tputsLatency" in options:
             output_max_tput_only(metrics)
             output_max_latency_only(metrics)
+        elif "maxSums" in options:
+            output_max_tput_only(metrics)
+            output_max_sums(metrics)
         else:
             output_metrics(options, metrics)
 
@@ -64,7 +73,9 @@ def read_input(args):
         elif arg.startswith("--onlytputs"):
             options["onlytputs"] = True
         elif arg.startswith("--tputsLatency"):
-            options["tputsLatency"] = True            
+            options["tputsLatency"] = True
+        elif arg.startswith("--maxSums"):
+            options["maxSums"] = True
         elif arg.startswith("--onlymax"):
             options["onlymax"] = True
         # figs and protocols are options that form lists
@@ -185,7 +196,7 @@ def extract_max_file_data(fig, protocol, f, dir_path, results_data):
         file_key = get_file_key(f, file_path, protocol)
 
         file_contents = np.loadtxt(file_path, dtype=float)
-        if file_contents.ndim == 1:  # read empty RMW file
+        if file_contents.ndim == 1:  # read empty RMW file]
             return
         elif "MAX" in file_key:
             results_data[fig][protocol][file_key] = file_contents[:, 2]
@@ -193,7 +204,7 @@ def extract_max_file_data(fig, protocol, f, dir_path, results_data):
             results_data[fig][protocol][file_key] = file_contents[:, 1]
 
 
-# Returns dictionary of {percentile: value ..., mean: } 
+# Returns dictionary of {percentile: value ..., mean: }
 def get_stats(options, file_contents):
     stats = {}
 
@@ -211,6 +222,9 @@ def get_stats(options, file_contents):
         for p in options["percentiles"]:
             # print("about to calculate percentile for file_contents = ", file_contents)
             stats["p" + str(p)] = np.percentile(file_contents, p)
+
+        if "maxSums" in options:
+            stats["max"] = file_contents.max()
 
     # mean
     stats["mean"] = statistics.mean(file_contents)
@@ -244,9 +258,39 @@ def results_data_to_metrics(options, results_data):
                         del metrics[fig][protocol][file_key]
             if len(total_protocol_data) > 0:
                 metrics[fig][protocol]["total_protocol_data"] = get_stats(options, total_protocol_data)
-            else: 
+            else:
                 print(protocol)
-                
+
+    return metrics
+
+
+def maxSums_results_data_to_metrics(options, results_data):
+    metrics = results_data.copy()
+
+    # Traverse each item in the original 3D dictionary (results_data)
+    for fig, fig_val in results_data.items():
+        for protocol, protocol_val in fig_val.items():
+            total_protocol_data = np.array([])
+
+            for file_key, file_contents in protocol_val.items():  # file_contents here is trimmed down compared to the file_contents in extract_file_data()
+                metrics[fig][protocol][file_key] = get_stats(options, file_contents)  # percentiles and mean
+
+                if "tput" not in file_key:  # add all Reads and Writes to total_protocol_data
+                    total_protocol_data = np.concatenate([total_protocol_data, file_contents])
+
+            if "pineapple" in protocol or "pqr" in protocol or "mpl" in protocol:
+                metrics[fig][protocol]["tput"] = {}
+                for file_key, _ in protocol_val.copy().items():
+                    if "tput" in file_key:
+                        if file_key == "tput":
+                            continue
+                        metrics[fig][protocol]["tput"] = {k: metrics[fig][protocol][file_key].get(k, 0) + metrics[fig][protocol]["tput"].get(k, 0) for k in set(metrics[fig][protocol][file_key])}
+                        del metrics[fig][protocol][file_key]
+            if len(total_protocol_data) > 0:
+                metrics[fig][protocol]["total_protocol_data"] = get_stats(options, total_protocol_data)
+            else:
+                print(protocol)
+
     return metrics
 
 
@@ -286,14 +330,17 @@ def output_metrics(options, metrics):
         table = metrics_table(metrics)
 
         if "table" in options:
+            print("printing table")
             print(table)
 
         if "txt":
+            print("printing text to ", w)
             table.border = False
             with open(metrics_dir + '/' + options["experiment"] + ".txt", 'w+') as w:
                 w.write(str(table))
 
     if "json" in options:
+        print("printing to json file ", metrics_dir + '/' + options["experiment"] + ".json")
         with open(metrics_dir + '/' + options["experiment"] + ".json", 'w+') as f:
             json.dump(metrics, f, indent=4)
 
@@ -307,18 +354,39 @@ def output_max_tput_only(metrics):
     for fig, fig_val in metrics.items():
         trimmed_metrics[fig] = {}
         for protocol, protocol_val in fig_val.items():
-            trimmed_metrics[fig][protocol] = metrics[fig][protocol]["tput"]["p50.0"]
+            trimmed_metrics[fig][protocol] = metrics[fig][protocol]["tput"]#["p50.0"]
 
     print(json.dumps(trimmed_metrics))
-    
+
+    experiment = check_cmd_output("ls " + "/root/go/src/gus-automation/results" + "| sort -r | head -n 1")
+    options["experiment"] = experiment
+    print ("tput data printed to file located at: /root/go/src/gus-automation/metrics" + '/' + options["experiment"] + "-tpt" + ".json")
+    with open("/root/go/src/gus-automation/metrics" + '/' + options["experiment"] + "-tpt" + ".json", 'w+') as f:
+            json.dump(trimmed_metrics, f, indent=4)
+
 def output_max_latency_only(metrics):
     trimmed_metrics = {}
     for fig, fig_val in metrics.items():
         trimmed_metrics[fig] = {}
         for protocol, protocol_val in fig_val.items():
-            trimmed_metrics[fig][protocol] = metrics[fig][protocol]["total_protocol_data"]
+            trimmed_metrics[fig][protocol] = metrics[fig][protocol]
 
     print(json.dumps(trimmed_metrics))
+
+    experiment = check_cmd_output("ls " + "/root/go/src/gus-automation/results" + "| sort -r | head -n 1")
+    options["experiment"] = experiment
+    print ("latency data printed to file located at: /root/go/src/gus-automation/metrics" + '/' + options["experiment"] + "-latency" + ".json")
+    with open("/root/go/src/gus-automation/metrics" + '/' + options["experiment"] + "-latency" + ".json", 'w+') as f:
+            json.dump(trimmed_metrics, f, indent=4)
+
+def output_max_sums(metrics):
+    print(json.dumps(metrics))
+
+    experiment = check_cmd_output("ls " + "/root/go/src/gus-automation/results" + "| sort -r | head -n 1")
+    options["experiment"] = experiment
+    print ("max sums data printed to file located at: /root/go/src/gus-automation/metrics" + '/' + options["experiment"] + "-maxSums" + ".json")
+    with open("/root/go/src/gus-automation/metrics" + '/' + options["experiment"] + "-maxSums" + ".json", 'w+') as f:
+            json.dump(metrics, f, indent=4)
 
 def output_max_only(metrics):
     trimmed_metrics = {}
