@@ -5,6 +5,8 @@ import sys
 import time
 import json
 from update_json import update
+from update_json import updateLatencies3
+from update_json import updateLatencies5
 from pathlib import Path
 from setup_network_delay_test import setup_network_delay
 from set_config import set_config
@@ -110,13 +112,87 @@ def run():
         temp_path = results_parent_path / (trimmed_fig)
 
         for protocol in protocols:
-            print("\nRunning", protocol, config_path, "...\n")
-            update(config_path, "replication_protocol", protocol)
+            if "fig10.json" in config_path:
+                if protocol == "gryff":
+                    continue
+                else:
+                    print("\nRunning", protocol, config_path, "...\n")
+                    update(config_path, "replication_protocol", "WAN-" + protocol)
+                    numClients = 1;
+                    if protocol == "pqr":
+                        numClients = 128;
+                    elif protocol == "pineapple":
+                        numClients = 250;
+                    elif protocol == "mp":
+                        numClients = 15;
+                    elif protocol == "mpl":
+                        numClients = 150;
+                    elif protocol == "epaxos":
+                        numClients = 20;
+
+                    update(config_path, "clients_per_replica", numClients)
+            else:
+                print("\nRunning", protocol, config_path, "...\n")
+                update(config_path, "replication_protocol", protocol)
 
             results_extension = Path(temp_path) / Path(protocol)
 
-            setup_network_delay(config_path)
-            run_experiment(results_extension, config_path)
+            if "fig2top.json" in config_path:
+                print("about to run fig2top")
+                rmw_percentages = [.01, .1, .2, .5, 1.0]
+                for rmw in rmw_percentages:
+                    update(config_path, "rmw_percentage", rmw)
+                    wr = (1 - rmw) / 2  # split reads/writes evenly
+                    update(config_path, "write_percentage", wr)
+
+                    # For fig2top, now results file structure is: TIMESTAMP/FIG2TOP/PROTOCOL-RMW_PERCENTAGE/CLIENT/...
+                    results_extension_fig2top = Path(str(results_extension) + "-" + (str(rmw)))
+
+                    setup_network_delay(config_path)
+                    run_experiment(results_extension_fig2top, config_path)
+            elif "fig2bottom.json" in config_path:
+                conflict_percentages = [2, 25, 50, 75, 100]
+                for conflict in conflict_percentages:
+                    update(config_path, "conflict_percentage", conflict)
+
+                    # For fig2bottom, now results file structure is: TIMESTAMP/FIG2BOTTOM/PROTOCOL-CONFLICT_PERCENTAGE/CLIENT/...
+                    results_extension_fig2bottom = Path(str(results_extension) + "-" + (str(conflict)))
+
+                    setup_network_delay(config_path)
+                    run_experiment(results_extension_fig2bottom, config_path)
+            elif "fig3.json" in config_path:
+                num_clients = [3, 10, 20, 30, 40, 50, 60, 70]
+                for num_client in num_clients :
+                    update(config_path, "clients_per_replica", num_client)
+
+                    # For fig3, now results file structure is: TIMESTAMP/FIG3/PROTOCOL-NUM_CLIENT/CLIENT/...
+                    results_extension_fig3 = Path(str(results_extension) + "-" + (str(num_client)))
+
+                    setup_network_delay(config_path)
+                    run_experiment(results_extension_fig3, config_path)
+            elif "fig10.json" in config_path:
+                updateLatencies5(config_path, "ireland")
+                results_extension_fig10 = Path(str(results_extension) + "-fig7top")
+                setup_network_delay(config_path)
+                run_experiment(results_extension_fig10, config_path)
+
+                update(config_path, "conflict_percentage", 25)
+                results_extension_fig10 = Path(str(results_extension) + "-fig7bottom")
+                setup_network_delay(config_path)
+                run_experiment(results_extension_fig10, config_path)
+
+                updateLatencies3(config_path, "virginia")
+                results_extension_fig10 = Path(str(results_extension) + "-fig4bottom")
+                setup_network_delay(config_path)
+                run_experiment(results_extension_fig10, config_path)
+
+                update(config_path, "conflict_percentage", 2)
+                results_extension_fig10 = Path(str(results_extension) + "-fig4top")
+                setup_network_delay(config_path)
+                run_experiment(results_extension_fig10, config_path)
+            else:
+                setup_network_delay(config_path)
+                run_experiment(results_extension, config_path)
 
 # Must be run as:
 # python run_n_experiments <config#> <config#> ...
