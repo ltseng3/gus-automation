@@ -9,7 +9,7 @@ file_latency_contents = json.load(file_latency)
 file_tpt = open("metrics/" + experiment + "-tpt" + ".json", 'r')
 file_tpt_contents = json.load(file_tpt)
 
-# Clients: 3, 10, 20, 40, 75, 100, 150
+# Clients: 3, 10, 20, 30, 40, 50, 60, 70
 pineappley50 = []
 pineappley90 = []
 pineapplex = []
@@ -34,9 +34,8 @@ mpaxosly50 = []
 mpaxosly90 = []
 mpaxoslx = []
 
-#clients = ('3', '10', '20', '40', '75', '100', '150')
 
-clients = ('10', '20', '30', '40', '50', '60', '70')
+clients = ('3', '10', '20', '30', '40', '50', '60', '70')
 
 for client in clients:
     if 'total_protocol_data' in file_latency_contents['fig3']['pineapple-' + client]:
