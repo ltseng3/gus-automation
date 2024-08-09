@@ -113,12 +113,19 @@ def run():
 
         for protocol in protocols:
             if "fig10.json" in config_path:
+                # gryff is not run for fig10
                 if protocol == "gryff":
                     continue
                 else:
                     print("\nRunning", protocol, config_path, "...\n")
+                    # change replication protocol to the WAN version (affects command_util.py)
                     update(config_path, "replication_protocol", "WAN-" + protocol)
                     numClients = 1;
+                    # hard-coded client values for fig10
+                    # NOT FINALIZED
+                    # may need to be tweaked
+                    # also may need to change line 135 in ~/src/gus-epaxos/src/clientWAN/clientWAN.go to have the value of id be lower than 10000
+                    # see this doc for test results, some with this value varied: https://docs.google.com/spreadsheets/d/1oZv0o1yT4O1DVXK8TLS4Rkkbs3HNMyvcCTludUltKdU/edit?gid=2059564213#gid=2059564213
                     if protocol == "pqr":
                         numClients = 128;
                     elif protocol == "pineapple":
@@ -139,6 +146,7 @@ def run():
 
             if "fig2top.json" in config_path:
                 print("about to run fig2top")
+                # make sure tpt-group-bar.py has matching labels to these values for plotting
                 rmw_percentages = [.01, .1, .2, .5, 1.0]
                 for rmw in rmw_percentages:
                     update(config_path, "rmw_percentage", rmw)
@@ -151,6 +159,7 @@ def run():
                     setup_network_delay(config_path)
                     run_experiment(results_extension_fig2top, config_path)
             elif "fig2bottom.json" in config_path:
+                # make sure tpt-group-bar-conflict.py has matching labels to these values for plotting
                 conflict_percentages = [2, 25, 50, 75, 100]
                 for conflict in conflict_percentages:
                     update(config_path, "conflict_percentage", conflict)
@@ -161,6 +170,8 @@ def run():
                     setup_network_delay(config_path)
                     run_experiment(results_extension_fig2bottom, config_path)
             elif "fig3.json" in config_path:
+                # check fig3.json for experiment_length: 180 fills up disk space on c6525-25g machines at least sometimes, so if that happens you may want to lower it (90 and 30 both should not have issues)
+                # make sure line.py has matching labels to these values for plotting
                 num_clients = [3, 10, 20, 30, 40, 50, 60, 70]
                 for num_client in num_clients :
                     update(config_path, "clients_per_replica", num_client)
@@ -171,6 +182,11 @@ def run():
                     setup_network_delay(config_path)
                     run_experiment(results_extension_fig3, config_path)
             elif "fig10.json" in config_path:
+                # updateLatencies5 and updateLatencies3 in update_json.py make sure there are the correct
+                # number of replicas and the correct latencies dependent on the given leader, in this case
+                # so that fig4top, fig4bottom, fig7top, and fig7botto can have the correct setups with only
+                # one config to run them all
+
                 updateLatencies5(config_path, "ireland")
                 results_extension_fig10 = Path(str(results_extension) + "-fig7top")
                 setup_network_delay(config_path)
