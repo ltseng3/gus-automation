@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import json
 from utils.command_util import check_cmd_output
 
+# load data from the latest experiment's metrics throughput and latency files
 experiment = check_cmd_output("ls results/| sort -r | head -n 1")
 file_latency = open("metrics/" + experiment + "-latency" + ".json", 'r')
 file_latency_contents = json.load(file_latency)
@@ -35,14 +36,17 @@ mpaxosly90 = []
 mpaxoslx = []
 
 
+# make sure these labels match the client values in run_experiments.py
 clients = ('3', '10', '20', '30', '40', '50', '60', '70')
 
+# grab p50.0 and p90.0 throughput data from throughput file as y-axis data if it exists for each figure
+# (sometimes some data is not received and the throughput for some systems is missing, in which case, the value 0 will be used for plotting)
+# grab latency data from latency file as x-axis data
 for client in clients:
     if 'total_protocol_data' in file_latency_contents['fig3']['pineapple-' + client]:
         pineappley50.append(file_latency_contents['fig3']['pineapple-' + client]['total_protocol_data']['p50.0'])
         pineappley90.append(file_latency_contents['fig3']['pineapple-' + client]['total_protocol_data']['p90.0'])
     else:
-
         pineappley50.append(0.0)
         pineappley90.append(0.0)
     pineapplex.append(file_tpt_contents['fig3']['pineapple-' + client]['mean'])
