@@ -97,7 +97,7 @@ python3.8 plot_figs.py
 
 
 ## Experiment-Specific Instructions
-Experiments can generally be run by following the instructions in the [Running experiment](running-experiment) section, simply using the corresponding config path as the EXPERIMENT_CONFIG_NAME (e.g., configs/fig2top.json). Many experiments can be plotted following the instructions in the [Plotting](plotting) section. However, some experiments use a different plotting script. The directions for how to plot the results of these experiments can be found in the sections below.
+Experiments can generally be run by following the instructions in the [Running experiment](#running-experiment) section, simply using the corresponding config path as the EXPERIMENT_CONFIG_NAME (e.g., configs/fig2top.json). Many experiments can be plotted following the instructions in the [Plotting](#plotting) section. However, some experiments use a different plotting script. The directions for how to plot the results of these experiments can be found in the sections below.
 
 ### Fig2top
 1. After running the experiment, go to results folder:
