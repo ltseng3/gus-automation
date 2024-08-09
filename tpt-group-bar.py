@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import json
 from utils.command_util import check_cmd_output
 
+# load data from the latest experiment's metrics file
 experiment = check_cmd_output("ls results/| sort -r | head -n 1")
 file = open("metrics/" + experiment + "-tpt" + ".json", 'r')
 file_contents = json.load(file)
@@ -15,8 +16,10 @@ mpl_vals = []
 gryff_vals = []
 epaxos_vals = []
 
+# make sure these labels match the rmw values in run_experiments.py
 rmw_vals = ('0.01', '0.1', '0.2', '0.5', '1.0')
 
+# grab throughput data from metrics file
 for rmw_val in rmw_vals:
     pineapple_vals.append(file_contents['fig2top']['pineapple-' + rmw_val]['p50.0'])
     pqr_vals.append(file_contents['fig2top']['pqr-' + rmw_val]['p50.0'])
