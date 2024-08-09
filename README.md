@@ -2,19 +2,19 @@
 This repo consists of python code that will autonomously run the replication protocol experiments cited in our paper ("Pineapple: Unifying Multi-Paxos and Atomic Shared Registers") and plot them. See `config_instruction.md` for information on available configs.
 
 ## Table of Contents
-- **Dependencies**
-  - Code
-  - Repos
-  - Cloudlab
-- **How to Run**
-    - Setup
-    - Running experiment
-    - Plotting
-- **Experiment-Specific Instructions**
-    - Fig2top
-    - Fig2bottom
-    - Fig3
-    - Fig10
+- [**Dependencies**](#dependencies-and-setup)
+  - [Code](#code)
+  - [Repos](#repositories)
+  - [Cloudlab](#cloudlab-profile)
+- [**How to Run**](#how-to-run)
+    - [Setup](#setup)
+    - [Running experiment](#running-experiment)
+    - [Plotting](#plotting)
+- [**Experiment-Specific Instructions**](#experiment-specific-instructions)
+    - [Fig2top](#fig2top)
+    - [Fig2bottom](#fig2bottom)
+    - [Fig3](#fig3)
+    - [Fig10](#fig10)
 ## Dependencies and Setup
 ### Code
 - Go 1.15 (for replication protocol code)
