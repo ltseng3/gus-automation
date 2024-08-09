@@ -21,6 +21,7 @@ def update(file_path, key, new_value):
 
     file.close()
 
+# ensures number of replicas is 3 and sets the latencies of those replicas to correspond with the given leader
 def updateLatencies3(file_path, leader):
     latencies = {
         'california': {
@@ -66,6 +67,7 @@ def updateLatencies3(file_path, leader):
 
     file.close()
 
+# ensures number of replicas is 5 and sets the latencies of those replicas to correspond with the given leader
 def updateLatencies5(file_path, leader):
     latencies = {
         'california': {
