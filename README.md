@@ -10,6 +10,11 @@ This repo consists of python code that will autonomously run the replication pro
     - Setup
     - Running experiment
     - Plotting
+- **Experiment-Specific Instructions**
+    - Fig2top
+    - Fig2bottom
+    - Fig3
+    - Fig10
 ## Dependencies and Setup
 ### Code
 - Go 1.15 (for replication protocol code)
@@ -90,5 +95,100 @@ python3.8 plot_figs.py
 ```
 - The plots will be in the plots folder
 
+
+## Experiment-Specific Instructions
+Experiments can generally be run by following the instructions in the [Running experiment](running-experiment) section, simply using the corresponding config path as the EXPERIMENT_CONFIG_NAME (e.g., configs/fig2top.json). Many experiments can be plotted following the instructions in the [Plotting](plotting) section. However, some experiments use a different plotting script. The directions for how to plot the results of these experiments can be found in the sections below.
+
+### Fig2top
+1. After running the experiment, go to results folder:
+```
+cd ~/go/src/gus-automation/results
+```
+2. Find the name of the timestamped folder from the Fig2top experiment (which needs to be the most recently run experiment) and run the following:
+```
+python3.8 ~/go/src/gus-automation//client_metrics.py 50 --onlytputs --path=/root/go/src/gus-automation/results/[EXPERIMENT_FOLDER_NAME]
+```
+  - [EXPERIMENT_FOLDER_NAME] should be replaced by the name of the folder in results containing the data from the latest Fig2top experiment that was run (e.g., 2024-08-06-14-02-50)
+  - The metrics file produced by this step can be found by going to the metrics folder:
+    ```
+    cd ~/go/src/gus-automation/metrics
+    ```
+3. Once the metrics file is produced, return to gus-automation folder:
+```
+cd ~/go/src/gus-automation
+```
+4. Run the following to plot the data from the metrics file:
+```
+python3.8 tpt-group-bar.py
+```
+5. The plot produced can be found in the plots folder:
+```
+cd ~/go/src/gus-automation/plotFigs/plots
+```
+
+### Fig2bottom
+1. Follow steps 1-3 under Fig2top, but instead in step 2 finding the timestamped folder from the Fig2bottom experiment
+2. Run the following to plot the data from the metrics file:
+```
+python3.8 tpt-group-bar-conflict.py
+```
+3. The plot produced can be found in the plots folder:
+```
+cd ~/go/src/gus-automation/plotFigs/plots
+```
+
+### Fig3
+1. After running the experiment, go to results folder:
+```
+cd ~/go/src/gus-automation/results
+```
+2. Find the name of the timestamped folder from the Fig3 experiment (which needs to be the most recently run experiment) and run the following:
+```
+python3.8 ~/go/src/gus-automation//client_metrics.py 50 90 --tputsLatency --path=/root/go/src/gus-automation/results/[EXPERIMENT_FOLDER_NAME]
+```
+  - [EXPERIMENT_FOLDER_NAME] should be replaced by the name of the folder in results containing the data from the latest Fig3 experiment that was run (e.g., 2024-08-06-14-02-50)
+  - The metrics files produced by this step can be found by going to the metrics folder:
+    ```
+    cd ~/go/src/gus-automation/metrics
+    ```
+3. Once the metrics files are produced, return to gus-automation folder:
+```
+cd ~/go/src/gus-automation
+```
+4. Run the following to plot the data from the metrics files:
+```
+python3.8 line.py
+```
+5. The plots produced can be found in the plots folder:
+```
+cd ~/go/src/gus-automation/plotFigs/plots
+```
+
+### Fig10
+1. After running the experiment, go to results folder:
+```
+cd ~/go/src/gus-automation/results
+```
+2. Find the name of the timestamped folder from the Fig10 experiment (which needs to be the most recently run experiment) and run the following:
+```
+python3.8 ~/go/src/gus-automation//client_metrics.py 50 --maxSums --path=/root/go/src/gus-automation/results/[EXPERIMENT_FOLDER_NAME]
+```
+  - [EXPERIMENT_FOLDER_NAME] should be replaced by the name of the folder in results containing the data from the latest Fig3 experiment that was run (e.g., 2024-08-06-14-02-50)
+  - The metrics file produced by this step can be found by going to the metrics folder:
+    ```
+    cd ~/go/src/gus-automation/metrics
+    ```
+3. Once the metrics file is produced, return to gus-automation folder:
+```
+cd ~/go/src/gus-automation
+```
+4. Run the following to plot the data from the metrics file:
+```
+python3.8 plotFig10.py
+```
+5. The plot produced can be found in the plots folder:
+```
+cd ~/go/src/gus-automation/plotFigs/plots
+```
 
 ----
