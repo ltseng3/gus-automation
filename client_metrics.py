@@ -263,7 +263,7 @@ def results_data_to_metrics(options, results_data):
 
     return metrics
 
-
+# prints max values to metrics file so that those values can be summed (for fig10)
 def maxSums_results_data_to_metrics(options, results_data):
     metrics = results_data.copy()
 
