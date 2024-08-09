@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import json
 from utils.command_util import check_cmd_output
 
+# load data from the latest experiment's metrics file
 experiment = check_cmd_output("ls results/| sort -r | head -n 1")
 file = open("metrics/" + experiment + "-maxSums" + ".json", 'r')
 file_contents = json.load(file)
@@ -16,12 +17,19 @@ epaxos_vals = []
 
 figs = ('fig4top', 'fig4bottom', 'fig7top', 'fig7bottom')
 
+# Currently, the sum of the max value in each lattput file is used for mp and epaxos for fig10
+# while pineapple, pqr, and mpl are not summed and simply use the "normal" method of calculation
+# in client_metrics.py. Sections of code are commented out with instructions on what to uncomment
+# and what to comment to switch to getting the max sum of pqr and mpl. Similar code can be used to
+# get the max sum for pineapple if that is desired
 print("")
 print("Note: maxSums except for pineapple, pqr, and mpl")
 print("")
 
 for figure in figs:
     print("-----" + figure + "-----")
+
+    # non-maxSum pineapple
     print("pineapple: " + str(file_contents['fig10']['pineapple-' + figure]['tput']['p50.0']))
     pineapple_vals.append(file_contents['fig10']['pineapple-' + figure]['tput']['p50.0'])
 
@@ -29,8 +37,11 @@ for figure in figs:
     if figure == "fig7top" or figure == 'fig7bottom':
         numFiles = 5
 
+    # comment this section to get maxSum of pqr
     print("pqr: " + str(file_contents['fig10']['pqr-' + figure]['tput']['p50.0']))
     pqr_vals.append(file_contents['fig10']['pqr-' + figure]['tput']['p50.0'])
+
+    # uncomment this section to get maxSum of pqr
     #maxSum = 0.0
     #for i in range(0, numFiles):
     #    if file_contents['fig10']['pqr-' + figure].get('lattput-' + str(i) + '.txt') is not None:
@@ -38,6 +49,7 @@ for figure in figs:
     #print("pqr: " + str(maxSum))
     #pqr_vals.append(maxSum)
 
+    # maxSum mp
     maxSum = 0.0
     for i in range(0, numFiles):
         if file_contents['fig10']['mp-' + figure].get('lattput-' + str(i) + '.txt') is not None:
@@ -45,8 +57,11 @@ for figure in figs:
     print("mp: " + str(maxSum))
     mp_vals.append(maxSum)
 
+    # comment this section to get maxSum of mpl
     print("mpl: " + str(file_contents['fig10']['mpl-' + figure]['tput']['p50.0']))
     mpl_vals.append(file_contents['fig10']['mpl-' + figure]['tput']['p50.0'])
+
+    # uncomment this section to get maxSum of mpl
     #maxSum = 0.0
     #for i in range(0, numFiles):
     #    if file_contents['fig10']['mpl-' + figure].get('lattput-' + str(i) + '.txt') is not None:
@@ -54,6 +69,7 @@ for figure in figs:
     #print("mpl: " + str(maxSum))
     #mpl_vals.append(maxSum)
 
+    # maxSum epaxos
     maxSum = 0.0
     for i in range(0, numFiles):
         if file_contents['fig10']['epaxos-' + figure].get('lattput-' + str(i) + '.txt') is not None:
