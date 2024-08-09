@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import json
 from utils.command_util import check_cmd_output
 
+# load data from the latest experiment's metrics file
 experiment = check_cmd_output("ls results/| sort -r | head -n 1")
 file = open("metrics/" + experiment + "-tpt" + ".json", 'r')
 file_contents = json.load(file)
@@ -15,8 +16,10 @@ mpl_vals = []
 gryff_vals = []
 epaxos_vals = []
 
+# make sure these labels match the conflict values in run_experiments.py
 conflicts = ('2', '25', '50', '75', '100')
 
+# grab throughput data from metrics file
 for conflict in conflicts:
     pineapple_vals.append(file_contents['fig2bottom']['pineapple-' + conflict]['p50.0'])
     pqr_vals.append(file_contents['fig2bottom']['pqr-' + conflict]['p50.0'])
