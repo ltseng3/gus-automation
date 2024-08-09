@@ -88,6 +88,13 @@ def main(results_path):
             print("Default reached, Plotting Case not found")
 
 
+# experiment-specific plot functions-- future task could be consolidating these to one or at least fewer functions with more arguments
+# (for example, the figure name is already passed in, so that can simply be determined in the function call)
+# keep in mind that fig9 needs to stay log-scale, however
+
+# note that fig2top, fig2bottom, fig3, and fig10 all have different plotting scripts and do not need their own functions here
+# see Experiment-Specific Instructions in README.md in repo for details on how to plot these
+
 def plot_fig4(plot_target_directory, csv_target_directory, figure_name, gryff_latency_folder,
                    pineapple_latency_folder, pqr_latency_folder, epaxos_latency_folder, mp_latency_folder, mpl_latency_folder):
     read_csvs, write_csvs, read_log_csvs, write_log_csvs, rmw_csvs, rmw_log_csvs = calculate_csvs_cdf(figure_name, csv_target_directory,
