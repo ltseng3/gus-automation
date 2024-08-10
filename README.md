@@ -34,7 +34,7 @@ This repo consists of python code that will autonomously run the replication pro
 - The Gryff repository: ``https://github.com/tigranb2/gryff-testing``
     - Note: Both ``gryff-testing`` and ``gus-epaxos`` repositories are derived from the EPaxos repository, but have different communication between clients and servers, so it is easier to have two separate repos.
 ### Cloudlab Profile
-It is easiest to run the experiments by used the pre-configured profile on Cloudlab, which already has all necessary repositories and dependencies installed. The profile can be instantiated [here](https://www.cloudlab.us/instantiate.php?profile=b5d01b37-541e-11ee-b28b-e4434b2381fc).
+It is easiest to run the experiments by used the pre-configured profile on Cloudlab, which already has all necessary repositories and dependencies installed. The profile can be instantiated [here](https://www.cloudlab.us/p/3481acf4ce28093ae0f0e3a639019c126cb71b78).
 
 ## How to Run
 ### Setup
